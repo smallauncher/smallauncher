@@ -1,0 +1,20 @@
+[package]
+name = "smallauncher"
+version = "0.1.0"
+description = "minimal minecraft launcher"
+edition = "2021"
+authors = ["Heráclito de Quadros Saldanha <heraclitoqsaldanha@gmail.com>"]
+license = "MIT OR Unlicense"
+keywords = ["smallauncher", "minecraft", "launcher"]
+homepage = "https://smallauncher.com/"
+
+[dependencies]
+smallauncher_lib = { path = "../smallauncher_lib" }
+log = "0.4.21"
+simple_logger = "5.0.0"
+
+[build-dependencies]
+winresource = "0.1.17"
+
+[lints.rust]
+unsafe_code = "forbid"

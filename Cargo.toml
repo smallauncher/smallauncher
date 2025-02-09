@@ -1,0 +1,8 @@
+[workspace]
+resolver = "2"
+members = ["crates/smallauncher", "crates/smallauncher_lib"]
+
+[profile.release]
+strip = true
+lto = true
+opt-level = "z"
