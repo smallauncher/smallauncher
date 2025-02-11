@@ -16,7 +16,7 @@ log = "0.4.21"
 sha1 = "0.10.6"
 hex = "0.4"
 zip = "2.1.5"
-oauth2 = { version = "5.0.0" }
+oauth2 = { version = "5.0.0", default-features = false }
 open = "5"
 uuid = "1.13.1"
 md5 = "0.7"
