@@ -1284,7 +1284,7 @@ dependencies = [
 
 [[package]]
 name = "smallauncher"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "log",
  "simple_logger",
