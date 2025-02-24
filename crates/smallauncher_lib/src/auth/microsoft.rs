@@ -3,7 +3,10 @@ use std::net;
 
 use crate::*;
 
-pub const CLIENT_ID: &'static str = "9963c094-1077-4c84-bf98-dcf47483272b";
+pub const CLIENT_ID: &'static str = match option_env!("CLIENT_ID") {
+	Some(client_id) => client_id,
+	None => "74909cec-49b6-4fee-aa60-1b2a57ef72e1",
+};
 pub const AUTH_URI: &'static str = "https://login.live.com/oauth20_authorize.srf";
 
 const HTTP_OK: &'static [u8] = b"
@@ -66,7 +69,7 @@ pub fn get_authorisation_code() -> error::Result<String> {
 		.set_response_type(&oauth2::ResponseType::new("code".to_string()))
 		.url();
 
-	open::that(auth_url.as_str())?;
+	open::that_in_background(auth_url.as_str());
 
 	let listener = net::TcpListener::bind("127.0.0.1:6565")?;
 	for stream in listener.incoming() {

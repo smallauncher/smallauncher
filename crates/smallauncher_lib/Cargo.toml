@@ -1,6 +1,6 @@
 [package]
 name = "smallauncher_lib"
-version = "0.1.0"
+version = "0.1.1"
 description = "smallauncher core library"
 edition = "2021"
 authors = ["Heráclito de Quadros Saldanha <heraclitoqsaldanha@gmail.com>"]

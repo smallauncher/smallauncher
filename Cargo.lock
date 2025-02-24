@@ -945,7 +945,7 @@ dependencies = [
 
 [[package]]
 name = "smallauncher"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "log",
  "simple_logger",
@@ -955,7 +955,7 @@ dependencies = [
 
 [[package]]
 name = "smallauncher_lib"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "hex",
  "log",

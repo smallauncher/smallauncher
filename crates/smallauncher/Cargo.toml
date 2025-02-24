@@ -1,6 +1,6 @@
 [package]
 name = "smallauncher"
-version = "0.1.1"
+version = "0.1.2"
 description = "minimal minecraft launcher"
 edition = "2021"
 authors = ["Heráclito de Quadros Saldanha <heraclitoqsaldanha@gmail.com>"]
@@ -10,7 +10,7 @@ homepage = "https://smallauncher.com/"
 readme = "README.md"
 
 [dependencies]
-smallauncher_lib = { path = "../smallauncher_lib", version = "0.1.0" }
+smallauncher_lib = { path = "../smallauncher_lib", version = "0.1.1" }
 log = "0.4.21"
 simple_logger = "5.0.0"
 
