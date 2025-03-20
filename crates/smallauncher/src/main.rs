@@ -7,7 +7,7 @@ use std::process;
 fn help() -> ! {
 	println!("smallauncher -d   --download <version>");
 	println!("smallauncher -c   --check    <version>");
-	println!("smallauncher -r   --run      <version> <user_name>");
+	println!("smallauncher -r   --run      <version> <username>");
 	println!("smallauncher -s   --search   <version>");
 	println!("smallauncher -l   --list");
 	println!("smallauncher -la  --list-all");
@@ -44,10 +44,10 @@ fn commands(mut args: std::env::Args) {
 		}
 		"-r" | "--run" => {
 			let version = args.next().unwrap_or_else(|| help());
-			let user_name = args.next().unwrap_or_else(|| help());
-			let auth = match smallauncher_lib::auth::load(&auth_path, &user_name).unwrap() {
+			let username = args.next().unwrap_or_else(|| help());
+			let auth = match smallauncher_lib::auth::load(&auth_path, &username).unwrap() {
 				Some(auth) => auth,
-				None => smallauncher_lib::auth::auth_offline(&user_name),
+				None => smallauncher_lib::auth::auth_offline(&username),
 			};
 			launch::launch_minecraft_version(&game_path, &jre_path, &version, &auth).unwrap();
 		}

@@ -87,7 +87,7 @@ pub fn get_authorisation_code() -> error::Result<String> {
 			return Ok(code);
 		}
 	}
-	panic!()
+	unreachable!()
 }
 
 pub fn get_xbl_autentication(access_token: &str) -> error::Result<XboxAuthResponse> {

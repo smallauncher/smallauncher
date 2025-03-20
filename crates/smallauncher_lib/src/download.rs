@@ -38,7 +38,13 @@ pub fn download_minecraft_version(minecraft_path: &path::Path, jre_path: &path::
 		file_meta.write(data_meta.as_bytes())?;
 		file_assets.write(data_assets.as_bytes())?;
 	}
-
+	{
+		//this file not is used per smallauncher to launch the game, but some mod installers (forge) expect this file exists
+		let profile_path = path!(minecraft_path, "launcher_profiles.json");
+		if !profile_path.exists() {
+			fs::write(profile_path, r#"{"profiles":{}}"#)?;
+		}
+	}
 	{
 		let java_versions: api::java::JavaVersions = api::get_from_url(api::java::JavaVersions::DEFAULT_URL)?;
 		let java_version = meta.java_version;

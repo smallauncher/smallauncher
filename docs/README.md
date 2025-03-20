@@ -26,7 +26,7 @@ smallauncher -r <version> <username>
 ```sh
 smallauncher -d   --download <version>
 smallauncher -c   --check    <version>
-smallauncher -r   --run      <version> <user_name>
+smallauncher -r   --run      <version> <username>
 smallauncher -s   --search   <version>
 smallauncher -l   --list
 smallauncher -la  --list-all
