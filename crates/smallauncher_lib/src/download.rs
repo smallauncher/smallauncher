@@ -1,3 +1,4 @@
+use crate::launch::load_meta_version;
 use crate::*;
 
 use log::*;
@@ -13,17 +14,18 @@ fn download<W: Write>(url: &str, writer: &mut W) -> Result<u64, error::Error> {
 
 pub fn download_minecraft_version(minecraft_path: &path::Path, jre_path: &path::Path, name: &str) -> Result<(), error::Error> {
 	let manifest: api::manifest::Manifest = api::get_from_url(api::manifest::Manifest::DEFAULT_URL)?;
-	let Some(version) = manifest.get_version(name) else {
-		return Err(error::Error::VersionNotFound);
+	let meta = match manifest.get_version(name) {
+		Some(v) => api::get_from_url(&v.url)?,
+		None => load_meta_version(minecraft_path, name)?,
 	};
-	let meta: api::meta::Version = api::get_from_url(&version.url)?;
+
 	let assets: api::assets::Assets = api::get_from_url(&meta.asset_index.url)?;
 	{
 		let data_meta = serde_json::to_string_pretty(&meta)?;
 		let data_assets = serde_json::to_string_pretty(&assets)?;
 
-		let path_client = path!(minecraft_path, "versions", &version.id, format!("{0}.jar", version.id));
-		let path_meta = path!(minecraft_path, "versions", &version.id, format!("{0}.json", version.id));
+		let path_client = path!(minecraft_path, "versions", &meta.id, format!("{0}.jar", meta.id));
+		let path_meta = path!(minecraft_path, "versions", &meta.id, format!("{0}.json", meta.id));
 		let path_assets = path!(minecraft_path, "assets", "indexes", format!("{0}.json", meta.asset_index.id));
 
 		let mut file_meta = file::create_or_open_file(&path_meta)?;

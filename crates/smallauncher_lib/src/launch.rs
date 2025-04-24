@@ -39,21 +39,7 @@ pub fn launch_minecraft_version(
 	version_name: &str,
 	account: &auth::Account,
 ) -> Result<(), error::Error> {
-	let meta: api::meta::Version = {
-		let meta_path = path!(game_path, "versions", &version_name, format!("{version_name}.json"));
-		let mut map1: serde_json::Map<String, serde_json::Value> = file::from_json_file(&meta_path)?;
-		match map1.remove("inheritsFrom") {
-			Some(serde_json::Value::String(version_name)) => {
-				let meta_path = path!(game_path, "versions", &version_name, format!("{version_name}.json"));
-				let map2: serde_json::Map<String, serde_json::Value> = file::from_json_file(&meta_path)?;
-				let v1 = serde_json::Value::Object(map1);
-				let v2 = serde_json::Value::Object(map2);
-				serde_json::from_value(merge(v2, v1))?
-			}
-			_ => serde_json::from_value(serde_json::Value::Object(map1))?,
-		}
-	};
-
+	let meta = load_meta_version(game_path, version_name)?;
 	extract_natives(&meta, &game_path)?;
 
 	let main_class = &meta.main_class;
@@ -160,6 +146,21 @@ pub fn generate_game_args(meta: &api::meta::Version, game_path: &path::Path, acc
 	args.push(osStr!("--userProperties"));
 	args.push(osStr!("{}"));
 	args
+}
+
+pub fn load_meta_version(game_path: &path::Path, version_name: &str) -> error::Result<api::meta::Version> {
+	let meta_path: path::PathBuf = path!(game_path, "versions", &version_name, format!("{version_name}.json"));
+	let mut map1: serde_json::Map<String, serde_json::Value> = file::from_json_file(&meta_path)?;
+	match map1.remove("inheritsFrom") {
+		Some(serde_json::Value::String(version_name)) => {
+			let meta_path = path!(game_path, "versions", &version_name, format!("{version_name}.json"));
+			let map2: serde_json::Map<String, serde_json::Value> = file::from_json_file(&meta_path)?;
+			let v1 = serde_json::Value::Object(map1);
+			let v2 = serde_json::Value::Object(map2);
+			Ok(serde_json::from_value(merge(v2, v1))?)
+		}
+		_ => Ok(serde_json::from_value(serde_json::Value::Object(map1))?),
+	}
 }
 
 pub fn generate_jvm_args(meta: &api::meta::Version, game_path: &path::Path) -> Vec<ffi::OsString> {
@@ -276,9 +277,8 @@ pub fn get_class_paths(meta: &api::meta::Version, game_path: &path::Path) -> ffi
 }
 
 pub fn check_version_integrity(game_path: &path::Path, version_name: &str) -> bool {
-	let path_version = path!(game_path, "versions", version_name, format!("{version_name}.json"));
 	let path_client = path!(game_path, "versions", version_name, format!("{version_name}.jar"));
-	let Ok(version) = file::from_json_file::<api::meta::Version, _>(&path_version) else {
+	let Ok(version) = load_meta_version(game_path, version_name) else {
 		return false;
 	};
 	if !file::file_hash(&version.downloads.client.sha1, &path_client).unwrap_or_default() {

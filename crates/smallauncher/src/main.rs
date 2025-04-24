@@ -74,7 +74,15 @@ fn commands(mut args: std::env::Args) {
 							return;
 						}
 					};
-
+					if !launch::check_version_integrity(&game_path, &version) {
+						match download::download_minecraft_version(&game_path, &jre_path, &version) {
+							Ok(_) => println!("Download completed!"),
+							Err(e) => {
+								println!("Download failed: {e:?}");
+								return;
+							}
+						};
+					}
 					match launch::launch_minecraft_version(&game_path, &jre_path, &version, &auth) {
 						Ok(_) => println!("Game launched successfully."),
 						Err(e) => println!("Failed to launch game: {:?}", e),
